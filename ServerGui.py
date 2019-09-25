@@ -576,7 +576,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.gui_worker_thread.started.connect(self.gui_worker.procCounter)
         self.gui_worker_thread.start()
         qt_threads.append(self.gui_worker_thread)
-
+        
     def cpu_value_ready(self, i):
         self.cpu_progress_bar.setValue(i)
 
@@ -621,7 +621,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             process.stdin.flush()
         for thread in qt_threads:
             thread.quit()
-
 
     def keyPressEvent(self, e):
         key = e.key()

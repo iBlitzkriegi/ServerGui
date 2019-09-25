@@ -1,7 +1,7 @@
 from PyQt5.Qt import QListWidget, QMenu, QAction, QIcon, QListWidgetItem
 import os
 
-path = os.path.dirname(os.path.realpath(__file__)) + '\\'
+path = os.path.dirname(os.path.realpath(__file__)) + '\\icons\\'
 
 
 class ListItem(QListWidgetItem):
