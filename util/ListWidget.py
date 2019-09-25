@@ -13,10 +13,9 @@ class ListItem(QListWidgetItem):
 
 
 class ListWidget(QListWidget):
-    def __init__(self, icon, parent=None):
+    def __init__(self, parent=None):
         QListWidget.__init__(self, parent)
         self.setUniformItemSizes(True)
-        self.head_icon = icon
         self.players = []
         global path
         self.path = path
