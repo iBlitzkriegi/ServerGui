@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.Qt import QMainWindow, QTableWidgetItem, QIcon
+from PyQt5 import QtWidgets
+from PyQt5.Qt import QMainWindow, QTableWidgetItem
 
 from PyQt5.QtCore import Qt, QThread
 
@@ -8,7 +8,7 @@ import psutil
 from threading import Thread
 import os
 import datetime
-from util import PlayerChecks, ListWidget
+from util import PlayerChecks
 from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
