@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from util import ListWidget
 
 
 class Ui_ServerGui(object):
@@ -51,7 +52,7 @@ class Ui_ServerGui(object):
         self.splitter.setHandleWidth(1)
         self.splitter.setChildrenCollapsible(True)
         self.splitter.setObjectName("splitter")
-        self.listWidget = QtWidgets.QListWidget(self.splitter)
+        self.listWidget = ListWidget(self.splitter)
         self.listWidget.setBaseSize(QtCore.QSize(0, 0))
         self.listWidget.setObjectName("listWidget")
         self.scrollArea = QtWidgets.QScrollArea(self.splitter)
