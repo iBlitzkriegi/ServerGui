@@ -13,7 +13,7 @@ from util import ListWidget
 class Ui_ServerGui(object):
     def setupUi(self, ServerGui):
         ServerGui.setObjectName("ServerGui")
-        ServerGui.resize(800, 549)
+        ServerGui.resize(1000, 715)
         ServerGui.setBaseSize(QtCore.QSize(1000, 715))
         font = QtGui.QFont()
         font.setKerning(True)
