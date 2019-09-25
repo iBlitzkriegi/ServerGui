@@ -576,8 +576,10 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.gui_worker_thread.started.connect(self.gui_worker.procCounter)
         self.gui_worker_thread.start()
         qt_threads.append(self.gui_worker_thread)
-        
+
     def cpu_value_ready(self, i):
+        vbar = self.scrollArea.verticalScrollBar()
+        vbar.setValue(vbar.maximum())
         self.cpu_progress_bar.setValue(i)
 
     def ram_value_ready(self, i):
