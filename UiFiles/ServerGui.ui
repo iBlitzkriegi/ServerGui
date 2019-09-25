@@ -440,11 +440,6 @@
           </column>
           <column>
            <property name="text">
-            <string>Whitelisted</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
             <string>OP</string>
            </property>
           </column>
