@@ -1,0 +1,13 @@
+{
+  "last-server": "Vixio Server",
+  "servers": [
+    {
+      "name": "Vixio Server",
+      "min-ram": 500,
+      "max-ram": 1500,
+      "java-version": "jre1.8.0_151",
+      "jar-file": "C:\\Python\\Scripts\\ServerGui\\TestingServer\\paperclip.jar",
+      "custom-arguments": null
+    }
+  ]
+}
