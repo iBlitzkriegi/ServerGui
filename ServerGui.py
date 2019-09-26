@@ -128,13 +128,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             column = 0
 
     def closeEvent(self, e):
-        ##TODO
-        global server_dead
-        global qt_threads
-        if not server_dead:
-            global process
-            process.stdin.write(b'stop\n')
-            process.stdin.flush()
+        if self.server.isAlive():
+            self.server.stop_server()
         for thread in qt_threads:
             thread.quit()
 

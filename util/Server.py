@@ -6,8 +6,8 @@ import datetime
 directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
 player_checks = PlayerChecks(directory)
 
-
 class Server(threading.Thread):
+
     def __init__(self, dir=None, *args, **kwards):
         super().__init__()
         self._stop = threading.Event()
