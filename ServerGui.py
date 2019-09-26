@@ -25,10 +25,6 @@ directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
 max_ram = round(psutil.virtual_memory().total / 1000 / 1000 - 1000)
 qt_threads = []
 
-process = []
-ran_commands = []
-server_dead = True
-
 
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
