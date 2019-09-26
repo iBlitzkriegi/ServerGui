@@ -9,6 +9,15 @@ from util import PlayerChecks, Server
 from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
+"""TODO
+1) Implement startup system with data.json file to handle different server configurations 
+2) Make global variables class fields 
+3) Implement killing Server thread onClose
+4) Re-visit the calculation for getting maximum possible ram that can be allocated 
+5) Re-visit system for scrolling console 
+6) Make args and directory class fields specific to each class configuration 
+7) Implement ran commands into Server to allow use of the up arrow to get last command
+"""
 
 args = ['C:\\Python\\Scripts\\ServerGui\\TestingServer\\paperclip.jar']
 directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
