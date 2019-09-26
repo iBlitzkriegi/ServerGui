@@ -139,20 +139,16 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.input_lineedit.setText(ran_commands[-1])
 
     def start_server(self):
-        print('clo')
         text = self.start_button.text()
         global directory
         global args
         if text == 'Start':
-            print('STARTY')
             self.server.set_directory(directory)
-            print('[[')
             self.server.set_args(args)
             self.server.set_window(self)
             self.server.start()
             self.start_button.setText('Stop')
         elif text == "Stop":
-            print('stop')
             self.server.stop_server()
             self.server = Server()
             self.start_button.setText('Start')
@@ -176,7 +172,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         global args
         self.server.stop_server()
         self.server = Server()
-        print('STARTING NEW')
         self.start_button.setText('Start')
         self.start_server()
 

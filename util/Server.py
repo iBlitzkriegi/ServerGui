@@ -18,16 +18,12 @@ class Server(threading.Thread):
         self.players = []
 
     def set_directory(self, directory):
-        print('called')
         if self.stopped is False:
-            print('trying to kill')
             self.stop_server()
-        print('set???')
         self.directory = directory
 
     def stop_server(self):
         if self.stopped is False:
-            print('RETURNING')
             return
         self.execute_input("stop")
         self.args = None
@@ -58,7 +54,6 @@ class Server(threading.Thread):
         return self._stop.isSet()
 
     def is_living(self):
-        print('DICK')
         return self.living
 
     def get_players(self):
@@ -71,7 +66,6 @@ class Server(threading.Thread):
         self.running = True
         while self.process.poll() is None:
             if self.stopped():
-                print('broke that bitch?')
                 return
             line = self.process.stdout.readline()
             utf_line = line.decode('utf-8')
@@ -105,7 +99,6 @@ class Server(threading.Thread):
                             self.players.pop(index)
                             self.window.listWidget.remove_player_by_index(index)
                     self.window.update_players()
-        print('still out here')
         self.process = None
         for i in range(0, self.window.tableWidget.rowCount()):
             self.window.tableWidget.removeRow(i)
