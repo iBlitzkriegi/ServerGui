@@ -38,7 +38,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.max_ram = round(psutil.virtual_memory().total / 1000 / 1000 - 1000)
 
         global qt_threads
-        self.max_ram_label.setText('Max. Ram: ' + str(self.max_ram) + "MB")
+        self.max_ram_label.setText('Max. Ram: %sMB' % str(self.max_ram))
         self.min_ram_label.setText('Min. Ram: 0MB')
         self.max_ram_slider.setMaximum(self.max_ram)
         self.min_ram_slider.setMaximum(self.max_ram)
@@ -99,13 +99,13 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.gui_usage_progress_bar.setValue(i)
 
     def min_slider_moving(self):
-        self.min_ram_label.setText("Min Ram: " + str(self.min_ram_slider.value()) + "MB")
+        self.min_ram_label.setText("Min Ram: %sMB" % str(self.min_ram_slider.value()))
         if self.min_ram_slider.value() >= self.max_ram_slider.value():
             self.max_ram_slider.setValue(self.min_ram_slider.value())
             self.max_ram_slider.update()
 
     def max_slider_moving(self):
-        self.max_ram_label.setText("Max Ram: " + str(self.max_ram_slider.value()) + "MB")
+        self.max_ram_label.setText("Max Ram: %sMB" % str(self.max_ram_slider.value()))
         if self.max_ram_slider.value() <= self.min_ram_slider.value():
             self.min_ram_slider.setValue(self.max_ram_slider.value())
 
