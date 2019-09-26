@@ -43,7 +43,6 @@ class ListWidget(QListWidget):
             if player['name'] == player_name:
                 self.players.pop(index)
                 self.update_players()
-                print('FDEAD')
 
     def remove_player_by_index(self, index):
         if len(self.players) == 0:
@@ -88,25 +87,23 @@ class ListWidget(QListWidget):
                 return
             action = action.text()
             if "Kick" in action or "Ban" in action:
-                print(self.players)
                 for index, player in enumerate(self.players):
-                    print(player)
                     if player['name'] == player_name:
                         self.remove_player_by_index(index)
                 if "Kick" in action:
-                    self.window.execute_input("kick " + player_name)
+                    self.window.execute_input("kick %s" % player_name)
                 else:
-                    self.window.execute_input("ban " + player_name)
+                    self.window.execute_input("ban %s" % player_name)
 
                 self.window.update_players()
             elif "Op" == action:
-                self.window.execute_input("op " + player_name)
+                self.window.execute_input("op %s" % player_name)
                 ##TODO Update players op dict value maybe?
             elif "De-Op" in action:
-                self.window.execute_input("deop " + player_name)
+                self.window.execute_input("deop %s" % player_name)
             elif "Survival" in action:
-                self.window.execute_input("gamemode survival " + player_name)
+                self.window.execute_input("gamemode survival %s" % player_name)
             elif "Creative" in action:
-                self.window.execute_input("gamemode creative " + player_name)
+                self.window.execute_input("gamemode creative %s" % player_name)
             elif "Adventure" in action:
-                self.window.execute_input("gamemode adventure " + player_name)
+                self.window.execute_input("gamemode adventure %s" % player_name)
