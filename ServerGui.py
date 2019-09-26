@@ -3,76 +3,16 @@ from PyQt5.Qt import QMainWindow, QTableWidgetItem
 
 from PyQt5.QtCore import Qt, QThread
 
-from subprocess import *
 import psutil
-from threading import Thread
 import os
-import datetime
-from util import PlayerChecks
+from util import PlayerChecks, Server
 from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
 
-def runJar(label, start_button, *args):
-    global process
-    global server_dead
-    global players
-    global player_checks
-    process = Popen(['java', '-jar'] + list(args), cwd=directory, stderr=PIPE, stdout=PIPE, stdin=PIPE)
-    server_dead = False
-    vbar = window.scrollArea.verticalScrollBar()
-    while process.poll() is None:
-        vbar.setValue(vbar.maximum())
-        line = process.stdout.readline()
-        utf_line = line.decode('utf-8')
-        if utf_line != '':
-            output = line.rstrip()
-            print(output.decode('utf-8'))
-            label.setText(label.text() + '\n' + output.decode('utf-8'))
-            vbar.setValue(vbar.maximum())
-            if 'logged in' in utf_line:
-                decoded_line = line.decode('utf-8')
-                information = decoded_line.split(' ')
-                player = information[2]
-                name = player.split('[')[0]
-                ip = player.split('/')[1].replace(']', '')
-                current_time = datetime.datetime.now()
-                player_dict = {
-                    "name": name,
-                    "ip": ip,
-                    "time-joined": current_time.strftime('%I:%M %p'),
-                    "whitelisted": player_checks.is_whitelisted(name),
-                    "op": player_checks.is_op(name)
-                }
-                players.append(player_dict)
-                window.listWidget.add_player(player_dict)
-                window.update_players()
-                window.listWidget.update_players()
-            elif 'left the game' in utf_line or 'Disconnected' in utf_line:
-                decoded_line = line.decode('utf-8')
-                information = decoded_line.split(' ')
-                name = information[2]
-                for index, player in enumerate(players):
-                    if player['name'] == name:
-                        players.pop(index)
-                        window.listWidget.remove_player_by_index(index)
-                window.update_players()
-        else:
-            vbar.setValue(vbar.maximum())
-    vbar.setValue(vbar.maximum())
-    start_button.setText('Start')
-    server_dead = True
-    for i in range(0, window.tableWidget.rowCount()):
-        window.tableWidget.removeRow(i)
-    window.listWidget.clear()
-    players.clear()
-
-
 args = ['C:\\Python\\Scripts\\ServerGui\\TestingServer\\paperclip.jar']
 directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
-player_checks = PlayerChecks(directory)
-server_thread = None
-players = []
+
 max_ram = round(psutil.virtual_memory().total / 1000 / 1000 - 1000)
 qt_threads = []
 
@@ -107,6 +47,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             if folder.startswith('jre'):
                 java_versions.append(folder)
         self.java_version_combo_box.addItems(sorted(java_versions))
+
         self.min_ram_slider.valueChanged.connect(self.min_slider_moving)
         self.max_ram_slider.valueChanged.connect(self.max_slider_moving)
 
@@ -138,6 +79,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.gui_worker_thread.started.connect(self.gui_worker.procCounter)
         self.gui_worker_thread.start()
         qt_threads.append(self.gui_worker_thread)
+        self.server = Server()
+        self.server.set_window(self)
 
     def cpu_value_ready(self, i):
         vbar = self.scrollArea.verticalScrollBar()
@@ -162,14 +105,13 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.min_ram_slider.setValue(self.max_ram_slider.value())
 
     def update_players(self):
-        global players
         for i in range(0, self.tableWidget.rowCount()):
             self.tableWidget.removeRow(i)
-        self.tableWidget.setRowCount(len(players))
+        self.tableWidget.setRowCount(len(self.server.get_players()))
 
         row = 0
         column = 0
-        for player in players:
+        for player in self.server.get_players():
             for item in player.values():
                 self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
                 column += 1
@@ -177,6 +119,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             column = 0
 
     def closeEvent(self, e):
+        ##TODO
         global server_dead
         global qt_threads
         if not server_dead:
@@ -196,66 +139,59 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.input_lineedit.setText(ran_commands[-1])
 
     def start_server(self):
+        print('clo')
         text = self.start_button.text()
-        global server_thread
-        global run_server
-        global process
         global directory
-
+        global args
         if text == 'Start':
-            global args
-            process = Thread(target=runJar, name='server',
-                             args=[self.output_label, self.start_button, args])
-            process.start()
-            server_thread = process
+            print('STARTY')
+            self.server.set_directory(directory)
+            print('[[')
+            self.server.set_args(args)
+            self.server.set_window(self)
+            self.server.start()
             self.start_button.setText('Stop')
-        elif text == 'Stop':
-            self.execute_input('stop')
+        elif text == "Stop":
+            print('stop')
+            self.server.stop_server()
+            self.server = Server()
             self.start_button.setText('Start')
 
     def execute_command(self):
-        global server_dead
-        if server_dead:
+        if not self.server.isAlive():
             self.input_lineedit.setText('')
             return
         self.execute_input(self.input_lineedit.text())
 
     def execute_input(self, input):
-        global server_dead
-        if server_dead:
+        if not self.server.isAlive():
             return
-
-        new_input = 'say ' + input + '\n' if self.say_checkbox.isChecked() else input + '\n'
-        byte_input = new_input.encode('utf-8')
-        global process
-        process.stdin.write(byte_input)
-        process.stdin.flush()
-        ran_commands.append(input)
+        self.server.execute_input(input)
         self.input_lineedit.setText('')
 
     def restart_server(self):
-        self.execute_input('stop')
-        global server_dead
-        while server_dead is False:
-            pass
-        global server_thread
+        if not self.server.isAlive():
+            return
+        global directory
+        global args
+        self.server.stop_server()
+        self.server = Server()
+        print('STARTING NEW')
+        self.start_button.setText('Start')
         self.start_server()
 
     def reload_server(self):
-        global server_dead
-        if server_dead:
+        if not self.server.isAlive():
             return
-        self.execute_input('reload')
-        self.execute_input('reload confirm')
+        self.server.execute_input('reload')
+        self.server.execute_input('reload confirm')
 
     def kill_server(self):
-        global server_thread
-        global server_dead
-        if server_thread is not None:
-            self.execute_input('stop')
-            self.start_button.setText('Start')
-
-        server_dead = True
+        if not self.server.isAlive():
+            return
+        self.server.stop_server()
+        self.server = Server()
+        self.start_button.setText('Start')
 
 
 if __name__ == "__main__":
@@ -264,5 +200,4 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = ServerGui()
     window.show()
-    window.listWidget.remove_player_by_name('Dick')
     sys.exit(app.exec_())
