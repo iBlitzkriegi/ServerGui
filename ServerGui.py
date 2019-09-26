@@ -10,19 +10,18 @@ from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
 """TODO
-1) Implement startup system with data.json file to handle different server configurations 
-2) Make global variables class fields 
-3) Implement killing Server thread onClose
-4) Re-visit the calculation for getting maximum possible ram that can be allocated 
-5) Re-visit system for scrolling console 
-6) Make args and directory class fields specific to each class configuration 
-7) Implement ran commands into Server to allow use of the up arrow to get last command
+- Implement startup system with data.json file to handle different server configurations 
+- Make global variables class fields 
+- Implement killing Server thread onClose
+- Re-visit the calculation for getting maximum possible ram that can be allocated 
+- Re-visit system for scrolling console 
+- Make args and directory class fields specific to each class configuration 
+- Implement ran commands into Server to allow use of the up arrow to get last command
 """
 
 args = ['C:\\Python\\Scripts\\ServerGui\\TestingServer\\paperclip.jar']
 directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
 
-max_ram = round(psutil.virtual_memory().total / 1000 / 1000 - 1000)
 qt_threads = []
 
 
@@ -36,22 +35,20 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.reload_button.clicked.connect(self.reload_server)
         self.kill_button.clicked.connect(self.kill_server)
         self.listWidget.set_window(self)
+        self.max_ram = round(psutil.virtual_memory().total / 1000 / 1000 - 1000)
 
-        global max_ram
         global qt_threads
-        """TODO
-        MAKE THESE SET TO THE SERIALIZED DATA
-        """
-        self.max_ram_label.setText('Max. Ram: ' + str(max_ram) + "MB")
+        self.max_ram_label.setText('Max. Ram: ' + str(self.max_ram) + "MB")
         self.min_ram_label.setText('Min. Ram: 0MB')
-        self.max_ram_slider.setMaximum(max_ram)
-        self.min_ram_slider.setMaximum(max_ram)
+        self.max_ram_slider.setMaximum(self.max_ram)
+        self.min_ram_slider.setMaximum(self.max_ram)
 
         java_versions = []
         for folder in os.listdir("C:/Program Files/Java"):
             if folder.startswith('jre'):
                 java_versions.append(folder)
         self.java_version_combo_box.addItems(sorted(java_versions))
+        self.java_version_combo_box.currentTextChanged.connect(self.java_version_selected)
 
         self.min_ram_slider.valueChanged.connect(self.min_slider_moving)
         self.max_ram_slider.valueChanged.connect(self.max_slider_moving)
@@ -86,6 +83,9 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         qt_threads.append(self.gui_worker_thread)
         self.server = Server()
         self.server.set_window(self)
+
+    def java_version_selected(self):
+        print('Java version changed')
 
     def cpu_value_ready(self, i):
         vbar = self.scrollArea.verticalScrollBar()
