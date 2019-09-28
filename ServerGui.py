@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QThread
 
 import psutil
 import os
-from util import PlayerChecks, Server
+from util import Server
 from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
@@ -21,6 +21,7 @@ from UiFiles import Ui_ServerGui
 
 args = ['C:\\Python\\Scripts\\ServerGui\\TestingServer\\paperclip.jar']
 directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
+
 
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
