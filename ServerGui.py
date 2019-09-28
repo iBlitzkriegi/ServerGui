@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QThread
 
 import psutil
 import os
-from util import Server
+from util import Server, JsonHandler
 from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
@@ -79,6 +79,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.gui_worker_thread.started.connect(self.gui_worker.procCounter)
         self.gui_worker_thread.start()
         self.qt_threads.append(self.gui_worker_thread)
+
+        self.json = JsonHandler()
         self.server = Server()
         self.server.set_window(self)
 
