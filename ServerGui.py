@@ -22,9 +22,6 @@ from UiFiles import Ui_ServerGui
 args = ['C:\\Python\\Scripts\\ServerGui\\TestingServer\\paperclip.jar']
 directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
 
-qt_threads = []
-
-
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent=parent)
@@ -36,8 +33,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.kill_button.clicked.connect(self.kill_server)
         self.listWidget.set_window(self)
         self.max_ram = round(psutil.virtual_memory().total / 1000 / 1000 - 1000)
+        self.qt_threads = []
 
-        global qt_threads
         self.max_ram_label.setText('Max. Ram: %sMB' % str(self.max_ram))
         self.min_ram_label.setText('Min. Ram: 0MB')
         self.max_ram_slider.setMaximum(self.max_ram)
@@ -64,7 +61,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.cpu_worker.moveToThread(self.cpu_worker_thread)
         self.cpu_worker_thread.started.connect(self.cpu_worker.procCounter)
         self.cpu_worker_thread.start()
-        qt_threads.append(self.cpu_worker_thread)
+        self.qt_threads.append(self.cpu_worker_thread)
 
         self.ram_worker = RamWorker()
         self.ram_worker_thread = QThread()
@@ -72,7 +69,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.ram_worker.moveToThread(self.ram_worker_thread)
         self.ram_worker_thread.started.connect(self.ram_worker.procCounter)
         self.ram_worker_thread.start()
-        qt_threads.append(self.ram_worker_thread)
+        self.qt_threads.append(self.ram_worker_thread)
 
         self.gui_worker = GuiWorker()
         self.gui_worker_thread = QThread()
@@ -80,7 +77,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.gui_worker.moveToThread(self.gui_worker_thread)
         self.gui_worker_thread.started.connect(self.gui_worker.procCounter)
         self.gui_worker_thread.start()
-        qt_threads.append(self.gui_worker_thread)
+        self.qt_threads.append(self.gui_worker_thread)
         self.server = Server()
         self.server.set_window(self)
 
@@ -126,7 +123,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
     def closeEvent(self, e):
         if self.server.isAlive():
             self.server.stop_server()
-        for thread in qt_threads:
+        for thread in self.qt_threads:
             thread.quit()
 
     def keyPressEvent(self, e):
