@@ -50,6 +50,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.max_ram_slider.valueChanged.connect(self.max_slider_moving)
         self.max_ram_slider.setValue(self.json.last_server['max-ram'])
         self.min_ram_slider.setValue(self.json.last_server['min-ram'])
+        self.current_config_combo_box.addItems(self.json.servers().keys())
 
         self.jar_file_line_edit.setText(self.json.get_directory()["full-path"][0])
 
