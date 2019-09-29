@@ -9,22 +9,30 @@ class JsonHandler:
         last_server = self.data['last-server']
         self.last_server = self.data['servers'][last_server]
 
-    def update_key(self, key, new_dictionary):
-        self.data[key] = new_dictionary
-
     def servers(self):
         return self.data['servers']
+
+    def create_server(self, name, new_server):
+        self.data['last-server'] = name
+        self.data['servers'][name] = new_server
+        self.dump_data()
+        self.last_server = self.data['servers'][name]
+
+    def current_server(self):
+        return self.data['last-server']
 
     def dump_data(self):
         with open('data.json', 'w') as file:
             json.dump(self.data, file, indent=4)
             file.close()
 
-    def last_server(self, input=None):
-        if input is not None:
-            self.data['last-server'] = input
-            self.dump_data()
-            return
+    def set_server(self, server):
+        self.data['last-server'] = server
+        self.last_server = self.data['servers'][server]
+        self.dump_data()
+        return
+
+    def last_server(self):
         last_server = self.data['last-server']
         return self.data['servers'][last_server]
 
@@ -56,4 +64,3 @@ class JsonHandler:
             "full-path": [directory]
         }
         return data
-

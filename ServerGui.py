@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from PyQt5.Qt import QMainWindow, QTableWidgetItem
+from PyQt5.Qt import QMainWindow, QTableWidgetItem, QFileDialog, QInputDialog, QLineEdit
 
 from PyQt5.QtCore import Qt, QThread
 
@@ -15,6 +15,7 @@ from UiFiles import Ui_ServerGui
 - Re-visit system for scrolling console 
 - Implement ran commands into Server to allow use of the up arrow to get last command
 """
+
 
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
@@ -48,9 +49,13 @@ class ServerGui(QMainWindow, Ui_ServerGui):
 
         self.min_ram_slider.valueChanged.connect(self.min_slider_moving)
         self.max_ram_slider.valueChanged.connect(self.max_slider_moving)
+        self.create_server_config_button.clicked.connect(self.create_server_configuration)
         self.max_ram_slider.setValue(self.json.last_server['max-ram'])
         self.min_ram_slider.setValue(self.json.last_server['min-ram'])
         self.current_config_combo_box.addItems(self.json.servers().keys())
+        self.current_config_combo_box.setCurrentIndex(
+            self.current_config_combo_box.findText(self.json.current_server()))
+        self.current_config_combo_box.currentTextChanged.connect(self.set_server)
 
         self.jar_file_line_edit.setText(self.json.get_directory()["full-path"][0])
 
@@ -84,6 +89,13 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.qt_threads.append(self.gui_worker_thread)
 
         self.server.set_window(self)
+
+    def set_server(self):
+        self.json.set_server(self.current_config_combo_box.currentText())
+        self.min_ram_slider.setValue(self.json.last_server['min-ram'])
+        self.max_ram_slider.setValue(self.json.last_server['max-ram'])
+        self.java_version_combo_box.setCurrentText(self.json.last_server['java-version'])
+        self.jar_file_line_edit.setText(self.json.last_server['jar-file'])
 
     def java_version_selected(self):
         self.json.set_java_version(self.java_version_combo_box.currentText())
@@ -191,6 +203,31 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.server.stop_server()
         self.server = Server()
         self.start_button.setText('Start')
+
+    def create_server_configuration(self):
+        name = QInputDialog.getText(self, 'Python Server Gui Dialog',
+                                    'Please give this new server configuration a name', QLineEdit.Normal)[0]
+        if name == '':
+            return
+        jar_file = QFileDialog.getOpenFileName(self, 'Select Jar File', '', 'JAR File (*.jar)')[0]
+        if jar_file == '':
+            return
+        file = '\\'.join(jar_file.split('/'))
+        min_ram = 0
+        max_ram = 0
+        server = {
+            "min-ram": min_ram,
+            "max-ram": max_ram,
+            "java-version": self.java_version_combo_box.currentText(),
+            "jar-file": file,
+            "custom-arguments": None
+        }
+        self.max_ram_slider.setValue(0)
+        self.min_ram_slider.setValue(0)
+        self.json.create_server(name, server)
+        self.current_config_combo_box.clear
+        self.current_config_combo_box.addItems(self.json.servers().keys())
+        self.current_config_combo_box.setCurrentIndex(self.current_config_combo_box.findText(name))
 
 
 if __name__ == "__main__":
