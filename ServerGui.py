@@ -58,6 +58,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.max_ram_slider.setValue(self.json.last_server['max-ram'])
         self.min_ram_slider.setValue(self.json.last_server['min-ram'])
 
+        self.jar_file_line_edit.setText(self.json.get_directory()["full-path"][0])
+
         header = self.tableWidget.horizontalHeader()
         for i in range(0, 5):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
