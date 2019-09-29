@@ -10,18 +10,11 @@ from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
 """TODO
-- Implement startup system with data.json file to handle different server configurations 
-- Make global variables class fields 
-- Implement killing Server thread onClose
+- Implement startup system with data.json file to handle different server configurations {*}
 - Re-visit the calculation for getting maximum possible ram that can be allocated 
 - Re-visit system for scrolling console 
-- Make args and directory class fields specific to each class configuration 
 - Implement ran commands into Server to allow use of the up arrow to get last command
 """
-
-args = ['C:\\Python\\Scripts\\ServerGui\\TestingServer\\paperclip.jar']
-directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
-
 
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
