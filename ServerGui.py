@@ -37,6 +37,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.qt_threads = []
 
         self.max_ram_label.setText('Max. Ram: %sMB' % str(self.max_ram))
+        self.json = JsonHandler()
+        self.server = Server()
         self.min_ram_label.setText('Min. Ram: 0MB')
         self.max_ram_slider.setMaximum(self.max_ram)
         self.min_ram_slider.setMaximum(self.max_ram)
@@ -46,6 +48,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             if folder.startswith('jre'):
                 java_versions.append(folder)
         self.java_version_combo_box.addItems(sorted(java_versions))
+        self.java_version_combo_box.setCurrentIndex(
+            self.java_version_combo_box.findText(self.json.last_server['java-version']))
         self.java_version_combo_box.currentTextChanged.connect(self.java_version_selected)
 
         self.min_ram_slider.valueChanged.connect(self.min_slider_moving)
@@ -80,12 +84,10 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.gui_worker_thread.start()
         self.qt_threads.append(self.gui_worker_thread)
 
-        self.json = JsonHandler()
-        self.server = Server()
         self.server.set_window(self)
 
     def java_version_selected(self):
-        print('Java version changed')
+        self.json.set_java_version(self.java_version_combo_box.currentText())
 
     def cpu_value_ready(self, i):
         vbar = self.scrollArea.verticalScrollBar()
@@ -100,12 +102,14 @@ class ServerGui(QMainWindow, Ui_ServerGui):
 
     def min_slider_moving(self):
         self.min_ram_label.setText("Min Ram: %sMB" % str(self.min_ram_slider.value()))
+        self.json.set_min_ram(self.min_ram_slider.value())
         if self.min_ram_slider.value() >= self.max_ram_slider.value():
             self.max_ram_slider.setValue(self.min_ram_slider.value())
             self.max_ram_slider.update()
 
     def max_slider_moving(self):
         self.max_ram_label.setText("Max Ram: %sMB" % str(self.max_ram_slider.value()))
+        self.json.set_max_ram(self.max_ram_slider.value())
         if self.max_ram_slider.value() <= self.min_ram_slider.value():
             self.min_ram_slider.setValue(self.max_ram_slider.value())
 
@@ -140,11 +144,12 @@ class ServerGui(QMainWindow, Ui_ServerGui):
 
     def start_server(self):
         text = self.start_button.text()
-        global directory
+        #  global directory
         global args
         if text == 'Start':
-            self.server.set_directory(directory)
-            self.server.set_args(args)
+            directory_dict = self.json.get_directory()
+            self.server.set_directory(directory_dict['working-directory'])
+            self.server.set_args(directory_dict['full-path'])
             self.server.set_window(self)
             self.server.start()
             self.start_button.setText('Stop')
