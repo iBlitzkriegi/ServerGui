@@ -155,8 +155,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
 
     def start_server(self):
         text = self.start_button.text()
-        #  global directory
-        global args
         if text == 'Start':
             directory_dict = self.json.get_directory()
             self.server.set_directory(directory_dict['working-directory'])
@@ -184,8 +182,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
     def restart_server(self):
         if not self.server.isAlive():
             return
-        global directory
-        global args
         self.server.stop_server()
         self.server = Server()
         self.start_button.setText('Start')
