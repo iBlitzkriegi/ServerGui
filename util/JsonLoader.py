@@ -12,6 +12,9 @@ class JsonHandler:
     def update_key(self, key, new_dictionary):
         self.data[key] = new_dictionary
 
+    def servers(self):
+        return self.data['servers']
+
     def dump_data(self):
         with open('data.json', 'w') as file:
             json.dump(self.data, file, indent=4)
