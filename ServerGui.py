@@ -47,6 +47,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         for folder in os.listdir("C:/Program Files/Java"):
             if folder.startswith('jre'):
                 java_versions.append(folder)
+
         self.java_version_combo_box.addItems(sorted(java_versions))
         self.java_version_combo_box.setCurrentIndex(
             self.java_version_combo_box.findText(self.json.last_server['java-version']))
@@ -54,6 +55,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
 
         self.min_ram_slider.valueChanged.connect(self.min_slider_moving)
         self.max_ram_slider.valueChanged.connect(self.max_slider_moving)
+        self.max_ram_slider.setValue(self.json.last_server['max-ram'])
+        self.min_ram_slider.setValue(self.json.last_server['min-ram'])
 
         header = self.tableWidget.horizontalHeader()
         for i in range(0, 5):
