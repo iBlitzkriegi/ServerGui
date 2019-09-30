@@ -6,6 +6,7 @@ import datetime
 directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
 player_checks = PlayerChecks(directory)
 
+
 class Server(threading.Thread):
 
     def __init__(self, dir=None, *args, **kwards):
@@ -68,7 +69,10 @@ class Server(threading.Thread):
             if self.stopped():
                 return
             line = self.process.stdout.readline()
-            utf_line = line.decode('utf-8')
+            try:
+                utf_line = line.decode('utf-8').strip()
+            except UnicodeDecodeError:
+                continue
             if utf_line != '':
                 output = line.rstrip()
                 print(output.decode('utf-8'))
