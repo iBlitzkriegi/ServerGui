@@ -3,9 +3,6 @@ from subprocess import Popen, PIPE
 from util.PlayerChecks import PlayerChecks
 import datetime
 
-directory = "C:\\Python\\Scripts\\ServerGui\\TestingServer\\"
-player_checks = PlayerChecks(directory)
-
 
 class Server(threading.Thread):
 
@@ -17,11 +14,13 @@ class Server(threading.Thread):
         self.process = None
         self.running = False
         self.players = []
+        self.player_checks = None
 
     def set_directory(self, directory):
         if self.stopped is False:
             self.stop_server()
         self.directory = directory
+        self.player_checks = PlayerChecks(directory + '/')
 
     def stop_server(self):
         if self.stopped is False:
@@ -89,8 +88,8 @@ class Server(threading.Thread):
                         "name": name,
                         "ip": ip,
                         "time-joined": current_time.strftime('%I:%M %p'),
-                        "whitelisted": player_checks.is_whitelisted(name),
-                        "op": player_checks.is_op(name)
+                        "whitelisted": self.player_checks.is_whitelisted(name),
+                        "op": self.player_checks.is_op(name)
                     }
                     self.players.append(player_dict)
                     self.window.listWidget.add_player(player_dict)
