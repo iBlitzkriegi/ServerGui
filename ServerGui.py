@@ -92,6 +92,10 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.server.set_window(self)
 
     def set_server(self):
+        if self.server.isAlive():
+            self.server.stop_server()
+            self.server = Server()
+            self.start_button.setText('Start')
         self.json.set_server(self.current_config_combo_box.currentText())
         self.min_ram_slider.setValue(self.json.last_server['min-ram'])
         self.max_ram_slider.setValue(self.json.last_server['max-ram'])
