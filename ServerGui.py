@@ -220,8 +220,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.server.stop_server()
             self.server = Server()
             self.start_button.setText('Start')
-            self.server_options_table.clear()
-            self.server_options_table.setRowCount(0)
 
     def execute_command(self):
         if not self.server.isAlive():
