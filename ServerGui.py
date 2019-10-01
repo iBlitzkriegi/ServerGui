@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from PyQt5.Qt import QMainWindow, QTableWidgetItem, QFileDialog, QInputDialog, QLineEdit
+from PyQt5.Qt import QMainWindow, QTableWidgetItem, QFileDialog, QInputDialog, QLineEdit, QMessageBox
 
 from PyQt5.QtCore import Qt, QThread
 
@@ -24,7 +24,6 @@ from UiFiles import Ui_ServerGui
 - Re-visit system for scrolling console 
 - Implement ran commands into Server to allow use of the up arrow to get last command
 """
-
 
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
@@ -76,6 +75,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         for i in range(0, 3):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
         self.splitter.setSizes([100, 600])
+        self.setup_server_options()
 
         self.cpu_worker = CpuWorker()
         self.cpu_worker_thread = QThread()
@@ -113,6 +113,27 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.max_ram_slider.setValue(self.json.last_server['max-ram'])
         self.java_version_combo_box.setCurrentText(self.json.last_server['java-version'])
         self.jar_file_line_edit.setText(self.json.last_server['jar-file'])
+        self.setup_server_options()
+
+    def setup_server_options(self):
+        directory_dict = self.json.get_directory()
+        lines = [line.strip() for line in open(directory_dict['working-directory'] + '/server.properties', 'r') if
+                 not line.startswith('#') and line != '']
+        self.server_options_table.setRowCount(len(lines))
+        row = 0
+        column = 0
+        for line in lines:
+            key, value = line.split('=')
+            if column == 2:
+                column = 0
+                row += 1
+            if column == 0:
+                item = QTableWidgetItem(key)
+                item.setFlags(Qt.ItemIsEnabled)
+                self.server_options_table.setItem(row, column, item)
+                column += 1
+            self.server_options_table.setItem(row, column, QTableWidgetItem(value))
+            column += 1
 
     def java_version_selected(self):
         self.json.set_java_version(self.java_version_combo_box.currentText())
@@ -182,20 +203,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.server.set_window(self)
             self.server.start()
             self.start_button.setText('Stop')
-            lines = [line.strip() for line in open(directory_dict['working-directory'] + '/server.properties', 'r') if not line.startswith('#') and line != '']
-            self.server_options_table.setRowCount(len(lines))
-            row = 0
-            column = 0
-            for line in lines:
-                key, value = line.split('=')
-                if column == 2:
-                    column = 0
-                    row += 1
-                if column == 0:
-                    self.server_options_table.setItem(row, column, QTableWidgetItem(key))
-                    column += 1
-                self.server_options_table.setItem(row, column, QTableWidgetItem(value))
-                column += 1
 
         elif text == "Stop":
             self.server.stop_server()
