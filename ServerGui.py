@@ -28,7 +28,7 @@ from UiFiles import Ui_ServerGui
 
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
-        QMainWindow.__init__(self, parent=parent)
+        super().__init__(parent=parent)
         self.setupUi(self)
         self.start_button.clicked.connect(self.start_server)
         self.execute_button.clicked.connect(self.execute_command)
