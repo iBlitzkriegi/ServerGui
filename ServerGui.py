@@ -25,6 +25,9 @@ from UiFiles import Ui_ServerGui
 - Implement ran commands into Server to allow use of the up arrow to get last command
 """
 
+showed_server_options_warning = False
+
+
 class ServerGui(QMainWindow, Ui_ServerGui):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -75,6 +78,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         for i in range(0, 3):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
         self.splitter.setSizes([100, 600])
+        self.server_options_table.itemDoubleClicked.connect(self.update_server_options)
         self.setup_server_options()
 
         self.cpu_worker = CpuWorker()
@@ -102,6 +106,14 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.qt_threads.append(self.gui_worker_thread)
 
         self.server.set_window(self)
+
+    def update_server_options(self, item):
+        global showed_server_options_warning
+        key = self.server_options_table.item(item.row(), 0).text()
+        if not showed_server_options_warning:
+            QMessageBox.about(self, 'Python Server Gui Dialog',
+                              'You are about to modify a server option, these changes will not take affect until the server is restarted.')
+            showed_server_options_warning = True
 
     def set_server(self):
         if self.server.isAlive():
