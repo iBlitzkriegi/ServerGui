@@ -9,11 +9,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from util import ListWidget
 
-
 class Ui_ServerGui(object):
     def setupUi(self, ServerGui):
         ServerGui.setObjectName("ServerGui")
-        ServerGui.resize(1000, 715)
+        ServerGui.resize(1026, 791)
         ServerGui.setBaseSize(QtCore.QSize(1000, 715))
         font = QtGui.QFont()
         font.setKerning(True)
@@ -274,7 +273,7 @@ class Ui_ServerGui(object):
         self.tableWidget = QtWidgets.QTableWidget(self.tab_2)
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(4)
+        self.tableWidget.setColumnCount(5)
         self.tableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
@@ -284,6 +283,8 @@ class Ui_ServerGui(object):
         self.tableWidget.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(4, item)
         self.verticalLayout_7.addWidget(self.tableWidget)
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
@@ -591,6 +592,8 @@ class Ui_ServerGui(object):
         item = self.tableWidget.horizontalHeaderItem(2)
         item.setText(_translate("ServerGui", "Time Joined"))
         item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("ServerGui", "Whitelisted"))
+        item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("ServerGui", "OP"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("ServerGui", "Players"))
         self.label_2.setText(_translate("ServerGui", "Current Configuration"))
