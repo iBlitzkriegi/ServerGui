@@ -63,6 +63,9 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         header = self.tableWidget.horizontalHeader()
         for i in range(0, 5):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
+        header = self.server_options_table.horizontalHeader()
+        for i in range(0, 3):
+            header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
         self.splitter.setSizes([100, 600])
 
         self.cpu_worker = CpuWorker()
@@ -170,10 +173,26 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.server.set_window(self)
             self.server.start()
             self.start_button.setText('Stop')
+            lines = [line.strip() for line in open(directory_dict['working-directory'] + '/server.properties', 'r') if not line.startswith('#') and line != '']
+            self.server_options_table.setRowCount(len(lines))
+            row = 0
+            column = 0
+            for line in lines:
+                key, value = line.split('=')
+                if column == 2:
+                    column = 0
+                    row += 1
+                if column == 0:
+                    self.server_options_table.setItem(row, column, QTableWidgetItem(key))
+                    column += 1
+                self.server_options_table.setItem(row, column, QTableWidgetItem(value))
+                column += 1
+
         elif text == "Stop":
             self.server.stop_server()
             self.server = Server()
             self.start_button.setText('Start')
+            self.server_options_table.clear()
 
     def execute_command(self):
         if not self.server.isAlive():
