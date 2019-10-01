@@ -10,7 +10,16 @@ from util.workers import CpuWorker, GuiWorker, RamWorker
 from UiFiles import Ui_ServerGui
 
 """TODO
-- Implement startup system with data.json file to handle different server configurations {*}
+- Implement the custom arguments field on the startup page
+- Take into account the min ram and max ram values from the startup page on startup
+- Implement new class to handle the server options list widgets
+- Update values in server.properties file when server options tables value changed
+- Update the server options list widgets with real information 
+- Name the server options line edits appropriately and take their input into account
+- Implement general file editor
+- Re-Consider the concept behind the json loader class and why it shouldnt just be handled by ServerGui 
+- Attempt remote connection support with support in the data file to salt and hash the login details
+- Implement error logging page
 - Re-visit the calculation for getting maximum possible ram that can be allocated 
 - Re-visit system for scrolling console 
 - Implement ran commands into Server to allow use of the up arrow to get last command
