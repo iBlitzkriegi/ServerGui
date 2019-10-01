@@ -56,6 +56,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.current_config_combo_box.setCurrentIndex(
             self.current_config_combo_box.findText(self.json.current_server()))
         self.current_config_combo_box.currentTextChanged.connect(self.set_server)
+        self.launch_server_button.clicked.connect(self.start_server)
 
         self.jar_file_line_edit.setText(self.json.get_directory()["full-path"][0])
 
@@ -157,8 +158,11 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         text = self.start_button.text()
         if text == 'Start':
             directory_dict = self.json.get_directory()
+            path = directory_dict['full-path']
+            if ' ' in path[0]:
+                path[0] = "\"" + path[0] + "\""
             self.server.set_directory(directory_dict['working-directory'])
-            self.server.set_args(directory_dict['full-path'])
+            self.server.set_args(path)
             self.server.set_window(self)
             self.server.start()
             self.start_button.setText('Stop')
