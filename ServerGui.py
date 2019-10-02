@@ -135,6 +135,10 @@ class ServerGui(QMainWindow, Ui_ServerGui):
 
     def setup_server_options(self):
         directory_dict = self.json.get_directory()
+        path = directory_dict['working-directory'] + '/server.properties'
+        if not os.path.exists(path):
+            self.server_options_table.setRowCount(0)
+            return
         lines = [line.strip() for line in open(directory_dict['working-directory'] + '/server.properties', 'r') if
                  not line.startswith('#') and line != '']
         self.server_options_table.setRowCount(len(lines))
