@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from PyQt5.Qt import QMainWindow, QTableWidgetItem, QFileDialog, QInputDialog, QLineEdit, QMessageBox
+from PyQt5.Qt import QMainWindow, QTableWidgetItem, QFileDialog, QInputDialog, QLineEdit, QMessageBox, QListWidgetItem
 
 from PyQt5.QtCore import Qt, QThread
 
@@ -120,9 +120,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
                 continue
             split_line = line.split('=')
             if split_line[0] == key:
-                print('FOUND THAT BIITCH')
                 lines[index] = "%s=%s" % (key, item)
-                print(lines[index])
         with open(path, 'w') as f:
             for line in lines:
                 f.write(line + '\n')
@@ -158,6 +156,9 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         lines = [line.strip() for line in open(directory_dict['working-directory'] + '/server.properties', 'r') if
                  not line.startswith('#') and line != '']
         self.server_options_table.setRowCount(len(lines))
+        self.whitelist_list_widget.clear()
+        self.banned_ips_list_widget.clear()
+        self.banned_players_list_widget.clear()
         row = 0
         column = 0
         for line in lines:
@@ -172,7 +173,23 @@ class ServerGui(QMainWindow, Ui_ServerGui):
                 column += 1
             self.server_options_table.setItem(row, column, QTableWidgetItem(value))
             column += 1
+        self.setup_whitelisted_players_widget()
+        self.setup_banned_players_widget()
         self.loading_server_options = False
+
+    def setup_whitelisted_players_widget(self):
+        whitelisted_players = self.json.whitelisted_players()
+        if whitelisted_players is None:
+            return
+        for player in whitelisted_players:
+            self.whitelist_list_widget.addItem(QListWidgetItem(player['name']))
+
+    def setup_banned_players_widget(self):
+        banned_players = self.json.banned_players()
+        if banned_players is None:
+            return
+        for player in banned_players:
+            self.banned_players_list_widget.addItem(QListWidgetItem(player['name']))
 
     def java_version_selected(self):
         self.json.set_java_version(self.java_version_combo_box.currentText())
@@ -240,9 +257,9 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.server.set_directory(directory_dict['working-directory'])
             self.server.set_args(path)
             self.server.set_window(self)
+
             self.server.start()
             self.start_button.setText('Stop')
-
         elif text == "Stop":
             self.server.stop_server()
             self.server = Server()
