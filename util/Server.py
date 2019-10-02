@@ -15,6 +15,7 @@ class Server(threading.Thread):
         self.running = False
         self.players = []
         self.player_checks = None
+        self.done_loading = False
 
     def set_directory(self, directory):
         if self.stopped is False:
@@ -59,6 +60,9 @@ class Server(threading.Thread):
     def get_players(self):
         return self.players
 
+    def is_done_loading(self):
+        return self.done_loading
+
     def run(self):
         self.process = Popen(['java', '-jar'] + list(self.args), cwd=self.directory, stderr=PIPE, stdout=PIPE,
                              stdin=PIPE)
@@ -102,6 +106,8 @@ class Server(threading.Thread):
                             self.players.pop(index)
                             self.window.listWidget.remove_player_by_index(index)
                     self.window.update_players()
+                elif 'Done' in utf_line:
+                    self.done_loading = True
         self.process = None
         for i in range(0, self.window.tableWidget.rowCount()):
             self.window.tableWidget.removeRow(i)
