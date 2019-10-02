@@ -13,7 +13,6 @@ from UiFiles import Ui_ServerGui
 - Implement the custom arguments field on the startup page
 - Take into account the min ram and max ram values from the startup page on startup
 - Implement new class to handle the server options list widgets
-- Update values in server.properties file when server options tables value changed
 - Update the server options list widgets with real information 
 - Name the server options line edits appropriately and take their input into account
 - Implement general file editor
@@ -113,6 +112,22 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             return
         key = self.server_options_table.item(item.row(), 0).text()
         item = item.text()
+        directory_dict = self.json.get_directory()
+        path = directory_dict['working-directory'] + '/server.properties'
+        lines = [line.strip() for line in open(path, 'r')]
+        for index, line in enumerate(lines):
+            if line.startswith('#'):
+                continue
+            split_line = line.split('=')
+            if split_line[0] == key:
+                print('FOUND THAT BIITCH')
+                lines[index] = "%s=%s" % (key, item)
+                print(lines[index])
+        with open(path, 'w') as f:
+            for line in lines:
+                f.write(line + '\n')
+            f.close()
+
 
     def show_edit_warning(self):
         global showed_server_options_warning
