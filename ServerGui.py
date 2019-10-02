@@ -78,7 +78,8 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         for i in range(0, 3):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
         self.splitter.setSizes([100, 600])
-        self.server_options_table.itemDoubleClicked.connect(self.update_server_options)
+        self.server_options_table.itemChanged.connect(self.update_server_options)
+        self.server_options_table.itemDoubleClicked.connect(self.show_edit_warning)
         self.setup_server_options()
 
         self.cpu_worker = CpuWorker()
@@ -108,8 +109,12 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.server.set_window(self)
 
     def update_server_options(self, item):
-        global showed_server_options_warning
         key = self.server_options_table.item(item.row(), 0).text()
+        item = item.text()
+        print("key %s value %s" % (key, item))
+
+    def show_edit_warning(self):
+        global showed_server_options_warning
         if not showed_server_options_warning and self.server.isAlive():
             QMessageBox.about(self, 'Python Server Gui Dialog',
                               'You are about to modify a server option, these changes will not take affect until the server is restarted.')
@@ -125,6 +130,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.max_ram_slider.setValue(self.json.last_server['max-ram'])
         self.java_version_combo_box.setCurrentText(self.json.last_server['java-version'])
         self.jar_file_line_edit.setText(self.json.last_server['jar-file'])
+        self.server_options_table.setRowCount(0)
         self.setup_server_options()
 
     def setup_server_options(self):
