@@ -754,31 +754,46 @@
        <attribute name="title">
         <string>Server Options</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_19">
+       <layout class="QVBoxLayout" name="verticalLayout_20">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_18">
+         <widget class="QTableWidget" name="server_options_table">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QTableWidget" name="server_options_table">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <column>
-             <property name="text">
-              <string>Name</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Value</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_18">
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="text">
+               <string>Whitelisted Players</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_12">
               <item>
@@ -789,11 +804,6 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>Whitelist</string>
-                 </property>
-                </item>
                </widget>
               </item>
               <item>
@@ -803,6 +813,11 @@
                 </item>
                 <item>
                  <widget class="QPushButton" name="add_whitelist_button">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Add</string>
                   </property>
@@ -811,6 +826,25 @@
                </layout>
               </item>
              </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_15">
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="text">
+               <string>Ops</string>
+              </property>
+             </widget>
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_13">
@@ -822,11 +856,6 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>OPs</string>
-                 </property>
-                </item>
                </widget>
               </item>
               <item>
@@ -836,6 +865,11 @@
                 </item>
                 <item>
                  <widget class="QPushButton" name="add_op_button">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Add</string>
                   </property>
@@ -844,6 +878,25 @@
                </layout>
               </item>
              </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_18">
+            <item>
+             <widget class="QLabel" name="label_10">
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="text">
+               <string>Banned Players</string>
+              </property>
+             </widget>
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -855,11 +908,6 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>Banned Players</string>
-                 </property>
-                </item>
                </widget>
               </item>
               <item>
@@ -869,6 +917,11 @@
                 </item>
                 <item>
                  <widget class="QPushButton" name="add_banned_player_button">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Add</string>
                   </property>
@@ -877,6 +930,25 @@
                </layout>
               </item>
              </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_19">
+            <item>
+             <widget class="QLabel" name="label_11">
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="text">
+               <string>Banned Ips</string>
+              </property>
+             </widget>
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -888,11 +960,6 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>Banned IPs</string>
-                 </property>
-                </item>
                </widget>
               </item>
               <item>
@@ -902,6 +969,11 @@
                 </item>
                 <item>
                  <widget class="QPushButton" name="add_banned_ip_button">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Add</string>
                   </property>
