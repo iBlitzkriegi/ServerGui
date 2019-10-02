@@ -175,6 +175,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             column += 1
         self.setup_whitelisted_players_widget()
         self.setup_banned_players_widget()
+        self.setup_banned_ips()
         self.loading_server_options = False
 
     def setup_whitelisted_players_widget(self):
@@ -190,6 +191,13 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             return
         for player in banned_players:
             self.banned_players_list_widget.addItem(QListWidgetItem(player['name']))
+
+    def setup_banned_ips(self):
+        banned_ips = self.json.banned_ips()
+        if banned_ips is None:
+            return
+        for ip in banned_ips:
+            self.banned_ips_list_widget.addItem(QListWidgetItem(str(ip['ip'])))
 
     def java_version_selected(self):
         self.json.set_java_version(self.java_version_combo_box.currentText())
