@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class JsonHandler:
@@ -11,6 +12,26 @@ class JsonHandler:
 
     def servers(self):
         return self.data['servers']
+
+    def whitelisted_players(self):
+        directory = self.last_server['jar-file']
+        path = ''.join([dirt + "/" for dirt in directory.split('\\') if '.jar' not in dirt])
+        if not os.path.exists(path + 'whitelist.json'):
+            return None
+        with open(path + 'whitelist.json', 'r') as f:
+            whitelisted_players = json.load(f)
+            f.close()
+        return whitelisted_players
+
+    def banned_players(self):
+        directory = self.last_server['jar-file']
+        path = ''.join([dirt + "/" for dirt in directory.split('\\') if '.jar' not in dirt])
+        if not os.path.exists(path + 'banned-players.json'):
+            return None
+        with open(path + 'banned-players.json', 'r') as f:
+            banned_players = json.load(f)
+            f.close()
+        return banned_players
 
     def create_server(self, name, new_server):
         self.data['last-server'] = name
