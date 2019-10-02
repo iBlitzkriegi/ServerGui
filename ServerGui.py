@@ -128,7 +128,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
                 f.write(line + '\n')
             f.close()
 
-
     def show_edit_warning(self):
         global showed_server_options_warning
         if not showed_server_options_warning and self.server.isAlive():

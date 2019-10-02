@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1026</width>
-    <height>791</height>
+    <width>1000</width>
+    <height>715</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -112,7 +112,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>85</width>
+                  <width>83</width>
                   <height>188</height>
                  </rect>
                 </property>
@@ -799,10 +799,10 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_11">
                 <item>
-                 <widget class="QLineEdit" name="lineEdit"/>
+                 <widget class="QLineEdit" name="add_whitelist_line_edit"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="add_whitelist_button">
                   <property name="text">
                    <string>Add</string>
                   </property>
@@ -832,10 +832,10 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_13">
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_3"/>
+                 <widget class="QLineEdit" name="add_op_line_edit"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_3">
+                 <widget class="QPushButton" name="add_op_button">
                   <property name="text">
                    <string>Add</string>
                   </property>
@@ -865,10 +865,10 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_16">
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_6"/>
+                 <widget class="QLineEdit" name="add_banned_player_line_edit"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_6">
+                 <widget class="QPushButton" name="add_banned_player_button">
                   <property name="text">
                    <string>Add</string>
                   </property>
@@ -898,10 +898,10 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_17">
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_7"/>
+                 <widget class="QLineEdit" name="add_banned_ip_line_edit"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_7">
+                 <widget class="QPushButton" name="add_banned_ip_button">
                   <property name="text">
                    <string>Add</string>
                   </property>
