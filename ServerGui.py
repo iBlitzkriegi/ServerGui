@@ -109,9 +109,10 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.server.set_window(self)
 
     def update_server_options(self, item):
+        if self.loading_server_options:
+            return
         key = self.server_options_table.item(item.row(), 0).text()
         item = item.text()
-        print("key %s value %s" % (key, item))
 
     def show_edit_warning(self):
         global showed_server_options_warning
@@ -134,6 +135,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.setup_server_options()
 
     def setup_server_options(self):
+        self.loading_server_options = True
         directory_dict = self.json.get_directory()
         path = directory_dict['working-directory'] + '/server.properties'
         if not os.path.exists(path):
@@ -156,6 +158,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
                 column += 1
             self.server_options_table.setItem(row, column, QTableWidgetItem(value))
             column += 1
+        self.loading_server_options = False
 
     def java_version_selected(self):
         self.json.set_java_version(self.java_version_combo_box.currentText())
