@@ -43,6 +43,17 @@ class JsonHandler:
             f.close()
         return banned_ips
 
+    def operators(self):
+        directory = self.last_server['jar-file']
+        path = ''.join([dirt + "/" for dirt in directory.split('\\') if '.jar' not in dirt])
+        if not os.path.exists(path + 'ops.json'):
+            return None
+        with open(path + 'ops.json', 'r') as f:
+            operators = json.load(f)
+            f.close()
+        return operators
+
+
     def create_server(self, name, new_server):
         self.data['last-server'] = name
         self.data['servers'][name] = new_server

@@ -144,7 +144,13 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.java_version_combo_box.setCurrentText(self.json.last_server['java-version'])
         self.jar_file_line_edit.setText(self.json.last_server['jar-file'])
         self.server_options_table.setRowCount(0)
+        self.clear_server_options()
         self.setup_server_options()
+
+    def clear_server_options(self):
+        self.ops_list_widget.clear()
+        self.banned_ips_list_widget.clear()
+        self.banned_players_list_widget.clear()
 
     def setup_server_options(self):
         self.loading_server_options = True
@@ -156,9 +162,6 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         lines = [line.strip() for line in open(directory_dict['working-directory'] + '/server.properties', 'r') if
                  not line.startswith('#') and line != '']
         self.server_options_table.setRowCount(len(lines))
-        self.whitelist_list_widget.clear()
-        self.banned_ips_list_widget.clear()
-        self.banned_players_list_widget.clear()
         row = 0
         column = 0
         for line in lines:
@@ -176,6 +179,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.setup_whitelisted_players_widget()
         self.setup_banned_players_widget()
         self.setup_banned_ips()
+        self.setup_operators()
         self.loading_server_options = False
 
     def setup_whitelisted_players_widget(self):
@@ -184,6 +188,13 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             return
         for player in whitelisted_players:
             self.whitelist_list_widget.addItem(QListWidgetItem(player['name']))
+
+    def setup_operators(self):
+        operators = self.json.operators()
+        if operators is None:
+            return
+        for player in operators:
+            self.ops_list_widget.addItem(QListWidgetItem(player['name']))
 
     def setup_banned_players_widget(self):
         banned_players = self.json.banned_players()
