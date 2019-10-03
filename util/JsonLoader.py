@@ -1,5 +1,8 @@
 import json
 import os
+import requests
+import lxml.html
+
 
 
 class JsonHandler:
@@ -12,6 +15,28 @@ class JsonHandler:
 
     def servers(self):
         return self.data['servers']
+
+    def add_player_to_whitelist(self, player_name):
+        uuid_of_player = self.get_uuid_from_name(player_name)
+        if uuid_of_player is None:
+            return
+        directory = self.last_server['jar-file']
+        path = ''.join([dirt + "/" for dirt in directory.split('\\') if '.jar' not in dirt])
+        if not os.path.exists(path + 'whitelist.json'):
+            return
+        with open(path + 'whitelist.json', 'r') as f:
+            whitelisted_players = json.load(f)
+            f.close()
+
+        whitelisted_players.append({
+            "uuid": uuid_of_player,
+            "name": player_name
+        })
+        with open(path + 'whitelist.json', 'w') as f:
+            json.dump(whitelisted_players, f, indent=4)
+            f.close()
+
+    ##TODO MAKE THIS REPEATED PATH LINE JUST A CLASS FIELD??
 
     def whitelisted_players(self):
         directory = self.last_server['jar-file']
@@ -52,7 +77,6 @@ class JsonHandler:
             operators = json.load(f)
             f.close()
         return operators
-
 
     def create_server(self, name, new_server):
         self.data['last-server'] = name
@@ -106,3 +130,13 @@ class JsonHandler:
             "full-path": [directory]
         }
         return data
+
+    def get_uuid_from_name(self, player_name):
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0'}
+        page = requests.get('https://mcuuid.net/?q=' + player_name, headers=headers)
+        doc = lxml.html.fromstring(page.content)
+        xpath_full_uuid = '/html/body/div/div/ul/li/div/div[2]/table/tbody/tr[1]/td[2]/input/@value'
+        raw_uuid = doc.xpath(xpath_full_uuid)
+        uuid = ''.join(raw_uuid)
+        return uuid if uuid != '' else None
