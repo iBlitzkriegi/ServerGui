@@ -67,6 +67,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
             self.current_config_combo_box.findText(self.json.current_server()))
         self.current_config_combo_box.currentTextChanged.connect(self.set_server)
         self.launch_server_button.clicked.connect(self.start_server)
+        self.add_whitelist_button.clicked.connect(self.add_player_to_whitelist)
 
         self.jar_file_line_edit.setText(self.json.get_directory()["full-path"][0])
 
@@ -76,6 +77,7 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         header = self.server_options_table.horizontalHeader()
         for i in range(0, 3):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
+        self.server_options_table.verticalHeader().setVisible(False)
         self.splitter.setSizes([100, 600])
         self.server_options_table.itemChanged.connect(self.update_server_options)
         self.server_options_table.itemDoubleClicked.connect(self.show_edit_warning)
@@ -106,6 +108,14 @@ class ServerGui(QMainWindow, Ui_ServerGui):
         self.qt_threads.append(self.gui_worker_thread)
 
         self.server.set_window(self)
+
+    def add_player_to_whitelist(self):
+        if self.add_whitelist_line_edit.text() == '':
+            return
+        if self.json.add_player_to_whitelist(self.add_whitelist_line_edit.text()):
+            self.whitelist_list_widget.clear()
+            self.setup_whitelisted_players_widget()
+            self.add_whitelist_line_edit.setText('')
 
     def update_server_options(self, item):
         if self.loading_server_options:
